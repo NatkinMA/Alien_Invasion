@@ -36,6 +36,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self._update_screen()
             self.clock.tick(60)                         # Устанавливаем частоту кадров игры.
 
@@ -80,6 +81,24 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 #        print(len(self.bullets))
+
+    def _change_fleet_direction(self):
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+
+    def _check_fleet_edges(self):
+        """Проверяем положение пришельца, достиг ли он края экрана."""
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _update_aliens(self):
+        """Обновляет позиции всех пришельцев во флоте.
+        Проверяет, достиг ли флот края экрана и обновляет позиции всех пришельцев."""
+        self._check_fleet_edges()
+        self.aliens.update()
 
     def _create_fleet(self):
         """Создаем флот пришельцев."""
