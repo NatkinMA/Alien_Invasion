@@ -22,20 +22,31 @@ class AlienInvasion:
         """Запускает основной цикл игры."""
         while True:
             self._check_events()
+            self.ship.update()
             self._update_screen()
             self.clock.tick(60)                         # Устанавливаем частоту кадров игры.
 
     def _check_events(self):
         """Обработка нажатия клавиш и события мыши."""
-        for event in pygame.event.get():  # Отслеживание событий клавиатуры и мыши.
+        for event in pygame.event.get():                # Отслеживание событий клавиатуры и мыши.
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = True
+                if event.key == pygame.K_LEFT:
+                    self.ship.moving_left = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = False
+                if event.key == pygame.K_LEFT:
+                    self.ship.moving_left = False
 
     def _update_screen(self):
         """Обновление изображения на экране и отображение нового экрана."""
-        self.screen.fill(self.settings.bg_color)  # При каждом проходе поверхность заливается выбранным цветом.
+        self.screen.fill(self.settings.bg_color)        # При каждом проходе поверхность заливается выбранным цветом.
         self.ship.blitme()
-        pygame.display.flip()  # Отображение последнего прорисованного экрана.
+        pygame.display.flip()                           # Отображение последнего прорисованного экрана.
 
 
 if __name__ == "__main__":
