@@ -84,6 +84,7 @@ class AlienInvasion:
         """Запускаем новую игру при нажатии кнопки Play."""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
+            self.settings.initialize_dynamic_settings() # Сброс игровых настроек.
             self.start_game()
 
     def _check_keydown_events(self, event):
@@ -119,6 +120,7 @@ class AlienInvasion:
             # Уничтожение существующих снарядов и создание нового флота.
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     def _update_bullets(self):
         """Обновляем позиции снарядов и удаляем снаряды, достигшие верхней границы экрана."""
