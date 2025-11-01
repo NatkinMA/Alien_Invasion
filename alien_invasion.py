@@ -5,6 +5,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
@@ -23,6 +24,7 @@ class AlienInvasion:
             (self.settings.screen_width, self.settings.screen_height))
 
         self.stats = GameStats(self)                    # Статистика игры.
+        self.sb = Scoreboard(self)                      # Статистика и панель результатов.
 
         """
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -86,6 +88,7 @@ class AlienInvasion:
         if button_clicked and not self.game_active:
             self.settings.initialize_dynamic_settings() # Сброс игровых настроек.
             self.start_game()
+            self.sb.prep_score()
 
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш."""
@@ -116,6 +119,10 @@ class AlienInvasion:
         # Удаляем снаряды и пришельцев, участвующих в коллизиях.
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, True, True)
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
         if not self.aliens:
             # Уничтожение существующих снарядов и создание нового флота.
             self.bullets.empty()
@@ -215,6 +222,8 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.ship.blitme()
         self.aliens.draw(self.screen)
+
+        self.sb.show_score()                            # Вывод информации о счете.
 
         if not self.game_active:                        # Если игра неактивна
             self.play_button.draw_button()              # отображаем кнопку "Play".

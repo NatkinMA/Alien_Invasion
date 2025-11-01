@@ -11,7 +11,7 @@ class Settings:
         self.ship_limit = 3
         # Параметры снаряда.
         self.bullet_speed = 2.5
-        self.bullet_width = 3
+        self.bullet_width = 300
         self.bullet_height = 15
         self.bullet_color = (255, 0, 0)
         self.bullets_allowed = 10
@@ -31,6 +31,7 @@ class Settings:
         self.alien_speed = 1.0
 
         self.fleet_direction = 1            # Направление движения флота пришельцев: 1 - вправо, -1 - влево.
+        self.alien_points = 50              # Подсчет очков.
 
     def increase_speed(self):
         """Увеличивает настройки скорости."""
