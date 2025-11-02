@@ -68,27 +68,25 @@ class AlienInvasion:
                 self._check_play_button(mouse_pos)
 
     def start_game(self):
-        # Сброс игровой статистики.
-        self.stats.reset_stats()
+        self.stats.reset_stats()                        # Сбрасываем игровую статистику.
+        self.sb.prep_score()
+        self.sb.prep_level()
         self.game_active = True
 
-        # Очистка групп aliens и bullets.
-        self.bullets.empty()
-        self.aliens.empty()
+        self.bullets.empty()                            # Удаляем выпущенные снаряды.
+        self.aliens.empty()                             # Очищаем флот пришельцев.
 
-        # Создаем новый флот и размещаем корабль в центре.
-        self._create_fleet()
-        self.ship.center_ship()
-        # Указатель мыши скрывается.
-        pygame.mouse.set_visible(False)
+        self._create_fleet()                            # Создаем флот пришельцев.
+        self.ship.center_ship()                         # Размещаем корабль в центре.
+
+        pygame.mouse.set_visible(False)                 # Скрываем указатель мыши.
 
     def _check_play_button(self, mouse_pos):
         """Запускаем новую игру при нажатии кнопки Play."""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
             self.settings.initialize_dynamic_settings() # Сброс игровых настроек.
-            self.start_game()
-            self.sb.prep_score()
+            self.start_game()                           # Запускаем игру.
 
     def _check_keydown_events(self, event):
         """Реагирует на нажатие клавиш."""
@@ -123,11 +121,15 @@ class AlienInvasion:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
+            self.sb.check_high_score()
         if not self.aliens:
             # Уничтожение существующих снарядов и создание нового флота.
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+            # Увеличиваем уровень.
+            self.stats.level += 1
+            self.sb.prep_level()
 
     def _update_bullets(self):
         """Обновляем позиции снарядов и удаляем снаряды, достигшие верхней границы экрана."""
